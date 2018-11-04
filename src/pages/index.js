@@ -66,8 +66,10 @@ class IndexPage extends React.Component {
 
         let form = document.getElementById('formID');
 
-        let textNode = document.createTextNode(JSON.stringify(probability * 100).slice(0, 2) + '%');
-        form.appendChild(textNode);
+        setTimeout(function(){
+          let textNode = document.createTextNode(JSON.stringify(probability * 100).slice(0, 2) + '%');
+          form.appendChild(textNode);
+        }, 1500);
 
         req.open(method, testUrl, true);
         req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
