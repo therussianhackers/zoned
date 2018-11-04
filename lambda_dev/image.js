@@ -28,6 +28,24 @@ function predictURL(modelType, imageURL) {
   });
 }
 
+function getConcepts(response) {
+  return new Promise((resolve, reject) => {
+    resolve(response.rawData.outputs[0].data.concepts);
+  });
+}
+
+function weddingConceptAlgo(concepts) {
+  return new Promise((resolve, reject) => {
+    for (let i = 0; i < concepts.length; i++) {
+      let concept = concepts[i];
+      if (concept.name === 'love') {
+        resolve(concept.value);
+      }
+    }
+    reject(0.10);
+  })
+}
+
 function predictBase64(modelType, imageB64) {
   return new Promise((resolve, reject) => {
     app.models.predict(models[modelType], {base64: imageB64}).then(
@@ -46,12 +64,7 @@ function predictBase64(modelType, imageB64) {
 exports.handler = function(event, context, callback) {
 
   console.log(event);
-
   let body = event.body;
-
-  console.log("BODY: ");
-  console.log(body);
-  console.log(typeof body);
 
   body = JSON.parse(body);
 
@@ -60,14 +73,21 @@ exports.handler = function(event, context, callback) {
     console.log("URL PREDICTION!!");
 
     predictURL("wedding", body.imageURL).then((response) => {
-
       console.log(response);
+      return getConcepts(response);
+    }).then((concepts) => {
+      return weddingConceptAlgo(concepts);
+    }).then((loveProbability) => {
+      let friendZone = 1.0 - loveProbability;
+
+      console.log("FRIENDZONE: ", friendZone);
 
       callback(null, {
-        statusCode: 200,
-        body: JSON.stringify(response, null, 2)
-      });
-    });
+          statusCode: 201,
+          body: "HELLO!!!"
+          // body: {"friendZone": friendZone}
+        });
+    })
 
   } else {
 

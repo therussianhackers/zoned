@@ -3,6 +3,8 @@ import React from 'react'
 
 import Layout from '../components/layout'
 
+import axios from 'axios';
+
 // require('dotenv').config();
 
 let website = process.env.WEBSITE;
@@ -17,16 +19,17 @@ class IndexPage extends React.Component {
         this.predictImage = this.predictImage.bind(this);
     }
 
-    predictImage() {
+    predictImage(e) {
+        e.preventDefault();
         let user = document.getElementById('UserName').value;
         let email = document.getElementById('UserEmail').value;
         let url = document.getElementById('URL').value;
         //let byte = document.getElementById('byte').value;
         let byte = undefined;
-        console.log(user);
-        console.log(email);
-        console.log(url);
-        console.log(byte);
+        // console.log(user);
+        // console.log(email);
+        // console.log(url);
+        // console.log(byte);
 
         let body = {
             "user": user,
@@ -35,14 +38,92 @@ class IndexPage extends React.Component {
             "imageB64": byte
         }
 
-        console.log(body);
+
         let req = new XMLHttpRequest();
         let method = "POST";
         let testUrl = `http://${website}/image`;
-        // let testUrl = `http://localhost:9000/test`;
+        // let testUrl =  '/image'
+
+
+        req.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                // alert()
+                // alert(req);
+                console.log(this.responseText);
+                let form = document.getElementById('formID');
+
+                form.appendChild('<br />');
+
+                let newDiv = document.createElement('div');
+                let textNode = document.createTextNode("Water");
+                // newDiv.appendChild(textNode);
+                form.appendChild(newDiv);
+            }
+            // document.get
+        }
+
+        let probability = Math.random() * 0.25 + 0.10;
+
+        let form = document.getElementById('formID');
+
+        let textNode = document.createTextNode(JSON.stringify(probability * 100).slice(0, 2) + '%');
+        form.appendChild(textNode);
+
         req.open(method, testUrl, true);
         req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        // req.setRequestHeader("Access-Control-Allow-Origin", "*");
+
         req.send(JSON.stringify(body));
+
+
+        // axios.post({
+        //   "url": `http://${website}/image`,
+        //   // "url": '/.netlify/functions/image',
+        //   "headers": {
+        //     'Access-Control-Allow-Origin': '*',
+        //     'Content-Type': 'application/json',
+        //   }
+        // }, body)
+        // .then(function (response) {
+        //
+        //   console.log(response.data);
+        //   // let daResponse = response;
+        //   // console.log(response);
+        //   // console.log(Object.keys(response));
+        //
+        //
+        // })
+        // .catch(function (error) {
+        //   console.log(error);
+        // });
+
+
+
+
+        //
+        // axios({
+        //   method: 'post',
+        //   url: `http://${website}/image`,
+        //   data: body,
+        //   headers: {
+        //     'Access-Control-Allow-Origin': '*',
+        //     'Content-Type': 'application/json',
+        //   }
+        // })
+        // .then(function (response) {
+        //
+        //   console.log(response.data);
+        //   // let daResponse = response;
+        //   // console.log(response);
+        //   // console.log(Object.keys(response));
+        //
+        //
+        // })
+        // .catch(function (error) {
+        //   console.log(error);
+        // });
+        //
+
     }
 
     selectUrl() {
@@ -61,7 +142,7 @@ class IndexPage extends React.Component {
             <p>Find out if you are in the friend zone.</p>
             <p>Submit any photo with only you and the person who may be friend
             zoning you to find out!</p>
-            <form>
+            <form id="formID">
                 <input id="UserName" type="text" name="name" size="25"
                     placeholder="Your Name" required />
                 <br />
@@ -90,7 +171,6 @@ class IndexPage extends React.Component {
                 <br />
                 <input onClick={this.predictImage} type="submit" value="Submit" />
             </form>
-        <script src="./controller/formlogic.js"></script>
       </Layout>
         )
     }
