@@ -11,7 +11,7 @@ exports.handler = function(event, context, callback) {
   // console.log('THE KEY: ');
   // console.log(clarifai_api_key);
   //
-  // console.log(event);
+  console.log(event);
 
   app.models.predict("c386b7a870114f4a87477c0824499348", "https://image.shutterstock.com/image-photo/happy-loving-couple-isolated-on-260nw-433992562.jpg").then(
   // app.models.predict("c386b7a870114f4a87477c0824499348", "https://cdn.eblnews.com/sites/default/files/styles/latest/public/cover/2018-04/R7mDttcYpnk.jpg").then(

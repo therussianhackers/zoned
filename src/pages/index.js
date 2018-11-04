@@ -1,3 +1,6 @@
+// require('dotenv').config();
+// let website = process.env.WEBSITE;
+
 import React from 'react'
 //import { Link } from 'gatsby'
 
@@ -16,27 +19,30 @@ class IndexPage extends React.Component {
         let user = document.getElementById('UserName').value;
         let email = document.getElementById('UserEmail').value;
         let url = document.getElementById('URL').value;
-        let byte = document.getElementById('byte').value;
+        //let byte = document.getElementById('byte').value;
+        let byte = undefined;
         console.log(user);
         console.log(email);
         console.log(url);
         console.log(byte);
-        debugger;
 
         let body = {
-            user: user,
-            email: email,
-            imageUrl: url,
-            imageB64: byte
+            "user": user,
+            "email": email,
+            "imageUrl": url,
+            "imageB64": byte
         }
+        console.log(body);
+        debugger
 
         let req = new XMLHttpRequest();
-        let method = "Post";
-        let testUrl = "localhost:9000/test";
-        req.open(method, testUrl);
-        req.setRequestHeader("Content-Type", "json;charset=UTF-8");
+        let method = "GET";
+        // let testUrl = `http://${website}/test`;
+        let testUrl = `http://localhost:9000/test`;
+        req.open(method, testUrl, true);
+        req.setRequestHeader("Content-Type", "applications/json");
         req.send(JSON.stringify(body));
-
+        debugger
     }
 
     selectUrl() {
