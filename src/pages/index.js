@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'gatsby'
+//import { Link } from 'gatsby'
 
 import Layout from '../components/layout'
 
@@ -34,20 +34,20 @@ class IndexPage extends React.Component {
             <input type="email" name="_replyto" size="25" placeholder="Your Email" required />
             <br />
             <br />
+            <br />
             <p>Submit a URL link to the photo OR upload the image file.</p>
             <p>Choose an option</p>
             <input type="radio" name="Source"
             onClick={this.selectUrl} />
-            URL
-            <br />
-            <input type="radio" name="Source"
-            onClick={this.selectFile} />
-            Upload File
-            <br />
+            <label>URL</label>
             <input id="URL" type="url" name="url" size="50" style={{visibility: "hidden"}}
                 placeholder="Your Image URL. example: https://example.img"
                 pattern="https://.*" />
             <br />
+            <br />
+            <input type="radio" name="Source"
+            onClick={this.selectFile} />
+            Upload File
             <input id="byte" type="file" name="photo" style={{visibility: "hidden"}}
                 accept="image/*" />
             <br />
@@ -55,7 +55,6 @@ class IndexPage extends React.Component {
             <input type="submit" value="Submit" />
         </form>
         <script src="./controller/formlogic.js"></script>
-        <Link to="/page-2/">Go to page 2</Link>
       </Layout>
         )
     }
