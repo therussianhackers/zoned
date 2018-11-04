@@ -50,26 +50,9 @@ class IndexPage extends React.Component {
                 // alert()
                 // alert(req);
                 console.log(this.responseText);
-                let form = document.getElementById('formID');
-
-                form.appendChild('<br />');
-
-                let newDiv = document.createElement('div');
-                let textNode = document.createTextNode("Water");
-                // newDiv.appendChild(textNode);
-                form.appendChild(newDiv);
             }
-            // document.get
         }
 
-        let probability = Math.random() * 0.25 + 0.10;
-
-        let form = document.getElementById('formID');
-
-        setTimeout(function(){
-          let textNode = document.createTextNode(JSON.stringify(probability * 100).slice(0, 2) + '%');
-          form.appendChild(textNode);
-        }, 1500);
 
         req.open(method, testUrl, true);
         req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
