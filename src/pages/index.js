@@ -28,10 +28,12 @@ class IndexPage extends React.Component {
             <p>Submit any photo with only you and the person who may be friend
             zoning you to find out!</p>
             <form action="https://formspree.io/kevinl622@gmail.com" method="POST">
-            <input type="text" name="name" size="25" placeholder="Your Name" required />
+            <input id="UserName" type="text" name="name" size="25"
+                placeholder="Your Name" required />
             <br />
             <br />
-            <input type="email" name="_replyto" size="25" placeholder="Your Email" required />
+            <input id="UserEmail" type="email" name="_replyto" size="25"
+                placeholder="Your Email" required />
             <br />
             <br />
             <br />
