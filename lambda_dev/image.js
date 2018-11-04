@@ -2,6 +2,8 @@ require('dotenv').config();
 let clarifai_api_key = process.env.CLARIFAI_API_KEY;
 let fs = require('fs');
 
+let atob = require('atob');
+
 const Clarifai = require('clarifai');
 
 const app = new Clarifai.App({
@@ -47,13 +49,19 @@ exports.handler = function(event, context, callback) {
 
   let body = event.body;
 
+  console.log("BODY: ");
   console.log(body);
+  console.log(typeof body);
+
+  body = JSON.parse(body);
 
   if (body.imageURL !== undefined) {
     // image URL provided
     console.log("URL PREDICTION!!");
 
-    predictURL("wedding", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBOxOxfEOLj9qws6fPUmYhVnqN8Is0S0gskWIguB0DqeA42nf7eQ").then((response) => {
+    predictURL("wedding", body.imageURL).then((response) => {
+
+      console.log(response);
 
       callback(null, {
         statusCode: 200,
@@ -62,9 +70,12 @@ exports.handler = function(event, context, callback) {
     });
 
   } else {
+
+
     // image B64 provided
 
     console.log("B64 PREDICTION!!");
+    return;
 
     let b64 = fs.readFileSync('./imagesTest/happy_couple.jpg');
 
