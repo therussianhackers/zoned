@@ -9,6 +9,34 @@ class IndexPage extends React.Component {
         super(props);
         this.selectUrl = this.selectUrl.bind(this);
         this.selectFile = this.selectFile.bind(this);
+        this.predictImage = this.predictImage.bind(this);
+    }
+
+    predictImage() {
+        let user = document.getElementById('UserName').value;
+        let email = document.getElementById('UserEmail').value;
+        let url = document.getElementById('URL').value;
+        let byte = document.getElementById('byte').value;
+        console.log(user);
+        console.log(email);
+        console.log(url);
+        console.log(byte);
+        debugger;
+
+        let body = {
+            user: user,
+            email: email,
+            imageUrl: url,
+            imageB64: byte
+        }
+
+        let req = new XMLHttpRequest();
+        let method = "Post";
+        let testUrl = "localhost:9000/test";
+        req.open(method, testUrl);
+        req.setRequestHeader("Content-Type", "json;charset=UTF-8");
+        req.send(JSON.stringify(body));
+
     }
 
     selectUrl() {
@@ -28,34 +56,34 @@ class IndexPage extends React.Component {
             <p>Submit any photo with only you and the person who may be friend
             zoning you to find out!</p>
             <form action="https://formspree.io/kevinl622@gmail.com" method="POST">
-            <input id="UserName" type="text" name="name" size="25"
-                placeholder="Your Name" required />
-            <br />
-            <br />
-            <input id="UserEmail" type="email" name="_replyto" size="25"
-                placeholder="Your Email" required />
-            <br />
-            <br />
-            <br />
-            <p>Submit a URL link to the photo OR upload the image file.</p>
-            <p>Choose an option</p>
-            <input type="radio" name="Source"
-            onClick={this.selectUrl} />
-            <label>URL</label>
-            <input id="URL" type="url" name="url" size="50" style={{visibility: "hidden"}}
-                placeholder="Your Image URL. example: https://example.img"
-                pattern="https://.*" />
-            <br />
-            <br />
-            <input type="radio" name="Source"
-            onClick={this.selectFile} />
-            Upload File
-            <input id="byte" type="file" name="photo" style={{visibility: "hidden"}}
-                accept="image/*" />
-            <br />
-            <br />
-            <input type="submit" value="Submit" />
-        </form>
+                <input id="UserName" type="text" name="name" size="25"
+                    placeholder="Your Name" required />
+                <br />
+                <br />
+                <input id="UserEmail" type="email" name="_replyto" size="25"
+                    placeholder="Your Email" required />
+                <br />
+                <br />
+                <br />
+                <p>Submit a URL link to the photo OR upload the image file.</p>
+                <p>Choose an option</p>
+                <input type="radio" name="Source"
+                onClick={this.selectUrl} />
+                <label>URL</label>
+                <input id="URL" type="url" name="url" size="50" style={{visibility: "hidden"}}
+                    placeholder="Your Image URL. example: https://example.img"
+                    pattern="https://.*" />
+                <br />
+                <br />
+                <input type="radio" name="Source"
+                onClick={this.selectFile} />
+                Upload File
+                <input id="byte" type="file" name="photo" style={{visibility: "hidden"}}
+                    accept="image/*" />
+                <br />
+                <br />
+                <input onClick={this.predictImage} type="submit" value="Submit" />
+            </form>
         <script src="./controller/formlogic.js"></script>
       </Layout>
         )
