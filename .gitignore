@@ -9,3 +9,6 @@ yarn-error.log
 
 # Environmental variables
 .env
+
+# My own folder for testing images that have been downloaded
+imagesTest
