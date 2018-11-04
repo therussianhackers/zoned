@@ -12,3 +12,5 @@ yarn-error.log
 
 # My own folder for testing images that have been downloaded
 imagesTest
+
+.env.development
