@@ -1,10 +1,12 @@
-// require('dotenv').config();
-// let website = process.env.WEBSITE;
-
 import React from 'react'
 //import { Link } from 'gatsby'
 
 import Layout from '../components/layout'
+
+// require('dotenv').config();
+
+let website = process.env.WEBSITE;
+
 
 class IndexPage extends React.Component {
     //const IndexPage = () => (
@@ -37,8 +39,8 @@ class IndexPage extends React.Component {
 
         let req = new XMLHttpRequest();
         let method = "GET";
-        // let testUrl = `http://${website}/test`;
-        let testUrl = `http://localhost:9000/test`;
+        let testUrl = `http://${website}/test`;
+        // let testUrl = `http://localhost:9000/test`;
         req.open(method, testUrl, true);
         req.setRequestHeader("Content-Type", "applications/json");
         req.send(JSON.stringify(body));
