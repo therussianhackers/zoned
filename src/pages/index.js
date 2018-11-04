@@ -1,5 +1,5 @@
 import React from 'react'
-//import { Link } from 'gatsby'
+import { Link } from 'gatsby'
 
 import Layout from '../components/layout'
 
@@ -156,6 +156,7 @@ class IndexPage extends React.Component {
                 <br />
                 <input onClick={this.predictImage} type="submit" value="Submit" />
             </form>
+            <Link to="/page-2/">Contact Us</Link>
       </Layout>
         )
     }
