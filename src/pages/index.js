@@ -31,20 +31,18 @@ class IndexPage extends React.Component {
         let body = {
             "user": user,
             "email": email,
-            "imageUrl": url,
+            "imageURL": url,
             "imageB64": byte
         }
-        console.log(body);
-        debugger
 
+        console.log(body);
         let req = new XMLHttpRequest();
-        let method = "GET";
-        let testUrl = `http://${website}/test`;
+        let method = "POST";
+        let testUrl = `http://${website}/image`;
         // let testUrl = `http://localhost:9000/test`;
         req.open(method, testUrl, true);
-        req.setRequestHeader("Content-Type", "applications/json");
+        req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         req.send(JSON.stringify(body));
-        debugger
     }
 
     selectUrl() {
@@ -63,7 +61,7 @@ class IndexPage extends React.Component {
             <p>Find out if you are in the friend zone.</p>
             <p>Submit any photo with only you and the person who may be friend
             zoning you to find out!</p>
-            <form action="https://formspree.io/kevinl622@gmail.com" method="POST">
+            <form>
                 <input id="UserName" type="text" name="name" size="25"
                     placeholder="Your Name" required />
                 <br />
