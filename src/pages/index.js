@@ -126,8 +126,8 @@ class IndexPage extends React.Component {
             <Layout>
             <h1>Friend Zone Photo Detector</h1>
             <p>Find out if you are in the friend zone.</p>
-            <p>Submit any photo with only you and the person who may be friend
-            zoning you to find out!</p>
+            <p>Submit any photo with two people and find out if it's a Friend
+            Zone situation!</p>
             <form id="formID">
                 <input id="UserName" type="text" name="name" size="25"
                     placeholder="Your Name" required />
