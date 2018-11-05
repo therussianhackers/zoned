@@ -20,7 +20,7 @@ let models = {
 
 function predictURL(modelType, imageURL) {
   return new Promise((resolve, reject) => {
-    app.models.predict(models[modelType], imageURL).then(
+    app.models.predict(Clarifai.WEDDING_MODEL, imageURL).then(
       function(response) {
         resolve(response);
       },
@@ -51,8 +51,18 @@ function weddingConceptAlgo(concepts) {
 }
 
 function predictBase64(modelType, imageB64) {
+
+  console.log(imageB64);
+
+  let indexOfFirstComma = imageB64.indexOf(',');
+  imageB64 = imageB64.slice(indexOfFirstComma + 1);
+
+  console.log(imageB64);
+
   return new Promise((resolve, reject) => {
-    app.models.predict(models[modelType], {base64: imageB64}).then(
+    // app.models.predict(models[modelType], {base64: imageB64}).then(
+    console.log(Clarifai);
+    app.models.predict(Clarifai.WEDDING_MODEL, {base64: imageB64}).then(
       function(response) {
         resolve(response);
       },
@@ -67,11 +77,10 @@ function predictBase64(modelType, imageB64) {
 
 function sendToClarifai(body) {
   return new Promise((resolve, reject) => {
-    if (body.imageURL !== undefined) {
+    if (body.imageURL.length > 0) {
       console.log("URL PREDICTION!!");
 
       predictURL("wedding", body.imageURL).then((response) => {
-        console.log(response);
         return getConcepts(response);
       }).then((concepts) => {
         return weddingConceptAlgo(concepts);
@@ -85,12 +94,29 @@ function sendToClarifai(body) {
       });
 
     } else {
-      let b64 = "blah";
+      console.log("Base64 PREDICTION");
+      console.log(body.imageUpload);
+      let b64 = body.imageUpload;
 
-      predictBase64("wedding", b64).then((response) => {
+      let reader = new FileReader();
+      reader.onloadend = function() {
 
-        console.log("get back response from b64 processing");
-      });
+        predictBase64("wedding", reader.result).then((response) => {
+          return getConcepts(response);
+        }).then((concepts) => {
+          return weddingConceptAlgo(concepts);
+        }).then((loveProbability) => {
+          let friendZone = 1.0 - loveProbability;
+
+          resolve({
+            "friendZone": friendZone
+          });
+
+        });
+      }
+      reader.readAsDataURL(b64);
+
+
 
     }
   });
@@ -113,14 +139,19 @@ class IndexPage extends React.Component {
         let user = document.getElementById('UserName').value;
         let email = document.getElementById('UserEmail').value;
         let url = document.getElementById('URL').value;
-        //let byte = document.getElementById('byte').value;
-        let byte = undefined;
+        // let byte = document.getElementById('byte').value;
+        let byte = document.querySelector('input[type=file]').files[0];
+
+        console.log(byte);
+
+        // let byte = undefined;
+
 
         let body = {
             "user": user,
             "email": email,
             "imageURL": url,
-            "imageB64": byte
+            "imageUpload": byte
         }
 
         sendToClarifai(body).then((result) => {
