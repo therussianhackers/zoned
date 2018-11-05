@@ -1,14 +1,105 @@
-import React from 'react'
-import { Link } from 'gatsby'
+import React from 'react';
+//import { Link } from 'gatsby'
 
-import Layout from '../components/layout'
+import Layout from '../components/layout';
 
 import axios from 'axios';
 import '../components/index.css'
 
-// require('dotenv').config();
-
 let website = process.env.WEBSITE;
+let clarifai_api_key = process.env.CLARIFAI_API_KEY;
+
+
+const Clarifai = require('clarifai');
+
+const app = new Clarifai.App({
+  apiKey: clarifai_api_key
+});
+
+let models = {
+  'wedding': 'c386b7a870114f4a87477c0824499348'
+};
+
+
+function predictURL(modelType, imageURL) {
+  return new Promise((resolve, reject) => {
+    app.models.predict(models[modelType], imageURL).then(
+      function(response) {
+        resolve(response);
+      },
+      function(err) {
+        console.log(err);
+        reject(err);
+      }
+    );
+  });
+}
+
+function getConcepts(response) {
+  return new Promise((resolve, reject) => {
+    resolve(response.rawData.outputs[0].data.concepts);
+  });
+}
+
+function weddingConceptAlgo(concepts) {
+  return new Promise((resolve, reject) => {
+    for (let i = 0; i < concepts.length; i++) {
+      let concept = concepts[i];
+      if (concept.name === 'love') {
+        resolve(concept.value);
+      }
+    }
+    reject(0.10);
+  })
+}
+
+function predictBase64(modelType, imageB64) {
+  return new Promise((resolve, reject) => {
+    app.models.predict(models[modelType], {base64: imageB64}).then(
+      function(response) {
+        resolve(response);
+      },
+      function(err) {
+        console.log(err);
+        reject(err);
+      }
+    );
+  });
+
+}
+
+function sendToClarifai(body) {
+  return new Promise((resolve, reject) => {
+    if (body.imageURL !== undefined) {
+      console.log("URL PREDICTION!!");
+
+      predictURL("wedding", body.imageURL).then((response) => {
+        console.log(response);
+        return getConcepts(response);
+      }).then((concepts) => {
+        return weddingConceptAlgo(concepts);
+      }).then((loveProbability) => {
+        let friendZone = 1.0 - loveProbability;
+
+        resolve({
+          "friendZone": friendZone
+        });
+
+      });
+
+    } else {
+      let b64 = "blah";
+
+      predictBase64("wedding", b64).then((response) => {
+
+        console.log("get back response from b64 processing");
+      });
+
+    }
+  });
+
+
+}
 
 
 class IndexPage extends React.Component {
@@ -27,10 +118,6 @@ class IndexPage extends React.Component {
         let url = document.getElementById('URL').value;
         //let byte = document.getElementById('byte').value;
         let byte = undefined;
-        // console.log(user);
-        // console.log(email);
-        // console.log(url);
-        // console.log(byte);
 
         let body = {
             "user": user,
@@ -39,76 +126,25 @@ class IndexPage extends React.Component {
             "imageB64": byte
         }
 
+        sendToClarifai(body, document).then((result) => {
+          let resultDiv = document.getElementById('result');
+          resultDiv.innerHTML = '';
 
-        let req = new XMLHttpRequest();
-        let method = "POST";
-        let testUrl = `http://${website}/image`;
-        // let testUrl =  '/image'
+          let img = document.createElement("img");
 
+          let friendZoneP = document.createElement('p');
+          let percentage = document.createTextNode("FriendZoned Probability: " + Math.round(100 * result.friendZone) + '%');
+          friendZoneP.appendChild(percentage);
 
-        req.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                // alert()
-                // alert(req);
-                console.log(this.responseText);
-            }
-        }
+          if (body.imageURL !== undefined) {
+            img.src = body.imageURL;
+          }
 
+          resultDiv.appendChild(friendZoneP);
+          resultDiv.appendChild(img);
 
-        req.open(method, testUrl, true);
-        req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        // req.setRequestHeader("Access-Control-Allow-Origin", "*");
-
-        req.send(JSON.stringify(body));
-
-
-        // axios.post({
-        //   "url": `http://${website}/image`,
-        //   // "url": '/.netlify/functions/image',
-        //   "headers": {
-        //     'Access-Control-Allow-Origin': '*',
-        //     'Content-Type': 'application/json',
-        //   }
-        // }, body)
-        // .then(function (response) {
-        //
-        //   console.log(response.data);
-        //   // let daResponse = response;
-        //   // console.log(response);
-        //   // console.log(Object.keys(response));
-        //
-        //
-        // })
-        // .catch(function (error) {
-        //   console.log(error);
-        // });
-
-
-
-
-        //
-        // axios({
-        //   method: 'post',
-        //   url: `http://${website}/image`,
-        //   data: body,
-        //   headers: {
-        //     'Access-Control-Allow-Origin': '*',
-        //     'Content-Type': 'application/json',
-        //   }
-        // })
-        // .then(function (response) {
-        //
-        //   console.log(response.data);
-        //   // let daResponse = response;
-        //   // console.log(response);
-        //   // console.log(Object.keys(response));
-        //
-        //
-        // })
-        // .catch(function (error) {
-        //   console.log(error);
-        // });
-        //
+          console.log(result);
+        })
 
     }
 
@@ -157,7 +193,9 @@ class IndexPage extends React.Component {
                 <br />
                 <input onClick={this.predictImage} type="submit" value="Submit" />
             </form>
+            
             <Link to="/page-2/">Contact Us</Link>
+            <div id="result"></div>
       </Layout>
         )
     }
