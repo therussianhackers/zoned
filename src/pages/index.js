@@ -1,14 +1,11 @@
 import React from 'react';
-//import { Link } from 'gatsby'
+import { Link } from 'gatsby';
 
 import Layout from '../components/layout';
 
-import axios from 'axios';
-import '../components/index.css'
+import '../components/index.css';
 
-let website = process.env.WEBSITE;
 let clarifai_api_key = process.env.CLARIFAI_API_KEY;
-
 
 const Clarifai = require('clarifai');
 
@@ -126,7 +123,7 @@ class IndexPage extends React.Component {
             "imageB64": byte
         }
 
-        sendToClarifai(body, document).then((result) => {
+        sendToClarifai(body).then((result) => {
           let resultDiv = document.getElementById('result');
           resultDiv.innerHTML = '';
 
@@ -193,7 +190,7 @@ class IndexPage extends React.Component {
                 <br />
                 <input onClick={this.predictImage} type="submit" value="Submit" />
             </form>
-            
+
             <Link to="/page-2/">Contact Us</Link>
             <div id="result"></div>
       </Layout>
