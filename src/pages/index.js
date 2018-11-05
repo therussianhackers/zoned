@@ -4,6 +4,7 @@ import { Link } from 'gatsby'
 import Layout from '../components/layout'
 
 import axios from 'axios';
+import '../components/index.css'
 
 // require('dotenv').config();
 
@@ -123,7 +124,7 @@ class IndexPage extends React.Component {
     render(){
         return (
             <Layout>
-            <h1>Hi people</h1>
+            <h1>Friend Zone Photo Detector</h1>
             <p>Find out if you are in the friend zone.</p>
             <p>Submit any photo with only you and the person who may be friend
             zoning you to find out!</p>
