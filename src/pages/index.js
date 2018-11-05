@@ -5,12 +5,12 @@ import Layout from '../components/layout';
 
 import '../components/index.css';
 
-let clarifai_api_key = process.env.CLARIFAI_API_KEY;
+// let clarifai_api_key = process.env.CLARIFAI_API_KEY;
 
 const Clarifai = require('clarifai');
 
 const app = new Clarifai.App({
-  apiKey: clarifai_api_key
+  apiKey: 'a74e72a3923c48789802afd4fb02b171'
 });
 
 let models = {
